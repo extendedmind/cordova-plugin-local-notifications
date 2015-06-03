@@ -117,7 +117,12 @@ public class Builder {
     public Notification build() {
         Uri sound     = options.getSoundUri();
         int smallIcon = options.getSmallIcon();
+        NotificationCompat.BigTextStyle style;
         NotificationCompat.Builder builder;
+        style = new NotificationCompat.BigTextStyle()
+                .bigText(options.getText());
+
+        int ledColor = options.getLedColor();
 
         builder = new NotificationCompat.Builder(context)
                 .setDefaults(0)
@@ -125,14 +130,13 @@ public class Builder {
                 .setContentText(options.getText())
                 .setNumber(options.getBadgeNumber())
                 .setTicker(options.getText())
+                .setSmallIcon(options.getSmallIcon())
+                .setLargeIcon(options.getIconBitmap())
                 .setAutoCancel(options.isAutoClear())
                 .setOngoing(options.isOngoing())
-                .setColor(options.getColor())
-                .setLights(options.getLedColor(), 100, 100);
-
-        if (sound != null) {
-            builder.setSound(sound);
-        }
+                .setStyle(style)
+                .setLights(ledColor, ledColor == 0 ? 0 : 500, ledColor == 0 ? 0 : 500)
+                .setSound(sound);
 
         if (smallIcon == 0) {
             builder.setSmallIcon(options.getIcon());

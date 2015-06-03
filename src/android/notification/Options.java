@@ -132,12 +132,19 @@ public class Options {
         if (options.has("iconUri") && !options.optBoolean("updated"))
             return;
 
+<<<<<<< 3e611de2eb02fe12781ca72a5225fb3ea2fec13a
         Uri iconUri  = assets.parse(options.optString("icon", "icon"));
         Uri soundUri = assets.parseSound(options.optString("sound", null));
+=======
+        Uri iconUri = assets.parse(options.optString("icon", "icon"));
+>>>>>>> Added possibility to skip setting led color altogether with led: false
 
         try {
             options.put("iconUri", iconUri.toString());
-            options.put("soundUri", soundUri.toString());
+            if (!options.has("sound") || (options.get("sound") instanceof String)){
+                Uri soundUri = assets.parseSound(options.optString("sound", null));
+                options.put("soundUri", soundUri.toString());
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -239,15 +246,16 @@ public class Options {
      *      The notification color for LED
      */
     public int getLedColor() {
-        String hex = options.optString("led", null);
-
-        if (hex == null) {
-            return NotificationCompat.DEFAULT_LIGHTS;
-        }
-
-        int aRGB = Integer.parseInt(hex, 16);
-
-        return aRGB + 0xFF000000;
+        // Default to not showing led at all
+        int aRGB = 0;
+        try{
+            if (!options.has("led") || (options.get("led") instanceof String)){
+                String hex = options.optString("led", "000000");
+                aRGB = Integer.parseInt(hex,16);
+                aRGB += 0xFF000000;
+            }
+        }catch(JSONException e){}
+        return aRGB;
     }
 
     /**
@@ -272,13 +280,13 @@ public class Options {
      */
     public Uri getSoundUri() {
         Uri uri = null;
-
-        try{
-            uri = Uri.parse(options.optString("soundUri"));
-        } catch (Exception e){
-            e.printStackTrace();
+        if (options.has("soundUri")){
+            try{
+                uri = Uri.parse(options.optString("soundUri"));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
-
         return uri;
     }
 

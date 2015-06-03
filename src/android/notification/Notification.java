@@ -119,7 +119,8 @@ public class Notification {
      * If the notification was in the past.
      */
     public boolean wasInThePast () {
-        return new Date().after(options.getTriggerDate());
+        Date afterOneMin = new Date(new Date().getTime() + 60000);
+        return afterOneMin.after(options.getTriggerDate());
     }
 
     /**
