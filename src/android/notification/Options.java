@@ -132,12 +132,7 @@ public class Options {
         if (options.has("iconUri") && !options.optBoolean("updated"))
             return;
 
-<<<<<<< 3e611de2eb02fe12781ca72a5225fb3ea2fec13a
         Uri iconUri  = assets.parse(options.optString("icon", "icon"));
-        Uri soundUri = assets.parseSound(options.optString("sound", null));
-=======
-        Uri iconUri = assets.parse(options.optString("icon", "icon"));
->>>>>>> Added possibility to skip setting led color altogether with led: false
 
         try {
             options.put("iconUri", iconUri.toString());
